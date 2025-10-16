@@ -23,7 +23,7 @@ import {
 	isLoginAtom,
 	userIdentityAtom,
 } from "@/renderer/store/storage"
-import type { UserState } from "@/renderer/types"
+import type { UserState } from "@/shared/types"
 import { atom } from "jotai"
 import { atomEffect } from "jotai-effect"
 import { atomWithQuery } from "jotai-tanstack-query"

@@ -12,9 +12,9 @@ import { postUserAction } from "@/renderer/request"
 import { accountKeyAtom } from "@/renderer/store/storage"
 import { userAtom } from "@/renderer/store/user"
 import { versionsAtom } from "@/renderer/store/versions"
+import type { UserInfo } from "@/shared/types"
 import { atomWithMutation } from "jotai-tanstack-query"
 import { syncUserState } from "../ipc/userInfo"
-import type { UserInfo } from "../types"
 
 const { VITE_BASE_URL } = import.meta.env
 const { rendererLog } = window.electronAPI

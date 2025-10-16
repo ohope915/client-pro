@@ -9,7 +9,7 @@
  */
 
 import { _ipcRenderer } from "@/renderer/constant"
-import type { UserState } from "@/renderer/types"
+import type { UserState } from "@/shared/types"
 
 // 同步用户状态到主进程
 export const syncUserState = async (userState: Omit<UserState, "token">) => {

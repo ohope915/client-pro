@@ -10,7 +10,7 @@
 
 import windowManager from "@/main/lib/WindowManager.js"
 import { execBin } from "@/main/lib/process.js"
-import { type UserState, userStore } from "@/main/lib/userStore.js"
+import { userStore } from "@/main/lib/userStore.js"
 import {
 	isAnyKernalBusy,
 	isKernalBusy,
@@ -20,6 +20,7 @@ import {
 import logger from "@/main/utils/wiston.js"
 import { BASE_URL } from "@/main/vars.js"
 import { LIBRARY_TYPE } from "@/shared/constants.js"
+import type { UserState } from "@/shared/types/user.js"
 import { platform } from "@electron-toolkit/utils"
 import dayjs from "dayjs"
 import isBetween from "dayjs/plugin/isBetween.js"

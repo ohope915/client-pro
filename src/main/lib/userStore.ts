@@ -8,10 +8,10 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import type { UserState } from "@/renderer/types/index.js"
+import type { UserState } from "@/shared/types/user.js"
 import Store from "electron-store"
 
-export type { UserState } from "@/renderer/types/index.js"
+export type { UserState } from "@/shared/types/user.js"
 
 class UserStore {
 	public _userStore = new Store({ name: "user_message" })
