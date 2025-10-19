@@ -12,33 +12,45 @@ import {
 	collectUserInfo,
 	generatePermissionSet,
 } from "@/renderer/hooks/useIdentityArray"
+import { updateUserInfo } from "@/renderer/ipc/userInfo"
 import { userIdentityAtom } from "@/renderer/store/storage"
-import { useInfoAtom, userInfoTtlAtom } from "@/renderer/store/user"
+import { userAtom } from "@/renderer/store/user"
 import { useAtom, useSetAtom } from "jotai"
 import { useEffect } from "react"
 import { useLocation } from "react-router"
+
+const { rendererLog } = window.electronAPI
+
 const RouteChangeListener = () => {
 	const location = useLocation()
-	const [{ data, refetch }] = useAtom(useInfoAtom)
+	const [{ token, user, isLoggedIn }, setUser] = useAtom(userAtom)
 	const setUserIdentity = useSetAtom(userIdentityAtom)
-	const [ttl, setTtl] = useAtom(userInfoTtlAtom)
 
 	useEffect(() => {
-		if (data) {
-			setUserIdentity(generatePermissionSet(collectUserInfo(data))) // 存储用户身份标识
+		// 更新用户身份标识
+		if (user) {
+			setUserIdentity(generatePermissionSet(collectUserInfo(user)))
+		}
+	}, [user])
+
+	useEffect(() => {
+		// 如果用户未登录，不执行更新逻辑
+		if (!isLoggedIn || !token) {
+			return
 		}
 
-		const now = Date.now()
-
-		if (refetch && now > ttl) {
-			refetch()
-			const randomGap =
-				Math.floor(Math.random() * 1000 * 60 * 5) + 31 * 1000 * 60 // 随机过期时间
-			setTtl(now + randomGap) // 随机过期时间
-		} else {
-			console.log("info valid sec.", (ttl - now) / 1000)
-		}
-	}, [location, refetch, data]) // 依赖于 location，每次路由变化时都会触发 refetch
+		// 每次路由变化都通过 IPC 更新用户信息
+		updateUserInfo(token)
+			.then((userState) => {
+				if (userState) {
+					setUser(userState)
+					rendererLog("info", "[RouteChangeListener] 用户信息已更新")
+				}
+			})
+			.catch((error) => {
+				rendererLog("error", `[RouteChangeListener] 更新用户信息失败: ${error}`)
+			})
+	}, [location, token, isLoggedIn]) // 每次路由变化时触发更新
 
 	return null
 }

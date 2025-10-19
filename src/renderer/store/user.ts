@@ -24,7 +24,6 @@ import {
 	userIdentityAtom,
 } from "@/renderer/store/storage"
 import type { UserInfo, UserState } from "@/shared/types"
-import { atom } from "jotai"
 import { atomEffect } from "jotai-effect"
 import { atomWithQuery } from "jotai-tanstack-query"
 import { RESET, atomWithStorage } from "jotai/utils"
@@ -134,29 +133,6 @@ export const userAuthAtom = atomWithQuery<{
 			} catch (error) {
 				return null
 			}
-		},
-	}
-})
-
-export const userInfoTtlAtom = atom<number>(0)
-
-export const useInfoAtom = atomWithQuery<UserInfo>((get) => {
-	return {
-		retry: false,
-		queryKey: ["user-info"],
-		queryFn: async () => {
-			const { token } = get(userAtom)
-			const res = await fetch(`${VITE_BASE_URL}/user/info`, {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					Authorization: token,
-				},
-				body: JSON.stringify({}),
-			})
-
-			if (!res.ok) return null
-			return await res.json()
 		},
 	}
 })

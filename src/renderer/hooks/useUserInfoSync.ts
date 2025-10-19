@@ -15,6 +15,8 @@ import { userInfoMutationAtom } from "../store/mutation"
 import { userAtom } from "../store/user"
 import { useInterval } from "./useInterval"
 
+const { rendererLog } = window.electronAPI
+
 /**
  * -- 使用用户信息同步的自定义 Hook
  */
@@ -29,6 +31,7 @@ export const useUserInfoSync = () => {
 		} else {
 			setUser(RESET)
 		}
+		rendererLog("info", "[useUserInfoSync] 用户信息已更新")
 	}, 1000 * 60) // -- 1分钟轮询
 
 	useEffect(() => {
