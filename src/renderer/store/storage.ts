@@ -8,11 +8,9 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import type { RealMarketConfigSchema } from "@/renderer/page/trading/config-form"
 import type { SelectStgType } from "@/renderer/types/strategy"
 import { atom } from "jotai"
 import { atomWithStorage } from "jotai/utils"
-import type { z } from "zod"
 
 // 版本提示列表
 export const versionListAtom = atomWithStorage<string[]>(
@@ -114,17 +112,17 @@ export const accountKeyAtom = atomWithStorage<{
 // 0: 路人
 // 1: 基础课程学生
 // 2: 分享会学生
-export const accountRoleAtom = atomWithStorage<{
-	msg: string
-	role: 0 | 1 | 2
-}>("accountRole", { msg: "NONE", role: 0 }, undefined, { getOnInit: true })
+// export const accountRoleAtom = atomWithStorage<{
+// 	msg: string
+// 	role: 0 | 1 | 2
+// }>("accountRole", { msg: "NONE", role: 0 }, undefined, { getOnInit: true })
 
-export const isAutoLoginAtom = atomWithStorage<boolean>(
-	"isAutoLogin",
-	true,
-	undefined,
-	{ getOnInit: true },
-)
+// export const isAutoLoginAtom = atomWithStorage<boolean>(
+// 	"isAutoLogin",
+// 	true,
+// 	undefined,
+// 	{ getOnInit: true },
+// )
 
 // export const isAutoRocketAtom = atomWithStorage<boolean>(
 // 	"isAutoRocket",
@@ -132,32 +130,6 @@ export const isAutoLoginAtom = atomWithStorage<boolean>(
 // 	undefined,
 // 	{ getOnInit: true },
 // )
-
-// 用户身份标识数组
-export const userIdentityAtom = atomWithStorage<string[]>(
-	"userIdentity", // 存储的键名
-	[], // 默认值
-	undefined, // 可选的存储选项
-	{ getOnInit: true }, // 初始化时从存储中获取值
-)
-export const realMarketConfigSchemaAtom = atomWithStorage<
-	Partial<z.infer<typeof RealMarketConfigSchema>>
->(
-	"realMarketConfig",
-	{
-		qmt_path: "",
-		account_id: "",
-		qmt_port: "58610",
-		message_robot_url: "",
-		filter_kcb: "1",
-		filter_cyb: "1",
-		filter_bj: "1",
-		performance_mode: "EQUAL",
-		date_start: new Date(new Date().setFullYear(new Date().getFullYear() - 3)),
-	},
-	undefined,
-	{ getOnInit: true },
-)
 
 export const showMoneyAtom = atomWithStorage<boolean>(
 	"showMoney",

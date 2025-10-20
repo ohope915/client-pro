@@ -49,7 +49,7 @@ const { VITE_XBX_ENV } = import.meta.env
  * -- 用于检查用户的登录状态、会员权限、系统要求等
  */
 export function usePermissionCheck() {
-	const { user, isLoggedIn } = useAtomValue(userAtom)
+	const { isLoggedIn, isMember } = useAtomValue(userAtom)
 
 	/**
 	 * -- 显示提示信息
@@ -92,7 +92,7 @@ export function usePermissionCheck() {
 		}
 
 		// -- 检查会员权限
-		if (requireMember && !user?.isMember) {
+		if (requireMember && !isMember) {
 			const message =
 				messages.requireMember ?? "本功能暂时仅限策略分享会同学使用"
 			!skipToast && showToast(message, "member")

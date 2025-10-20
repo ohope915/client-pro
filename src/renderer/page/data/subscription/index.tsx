@@ -9,8 +9,8 @@
  */
 
 import { DataTable } from "@/renderer/components/ui/data-table"
+import { usePermission } from "@/renderer/hooks/useAccountArray"
 import { useDataSubscribed } from "@/renderer/hooks/useDataSubscribed"
-import { usePermission } from "@/renderer/hooks/useIdentityArray"
 import { useProductList } from "@/renderer/hooks/useProductList"
 import {
 	transSubscribeData,

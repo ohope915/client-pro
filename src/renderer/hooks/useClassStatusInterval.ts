@@ -8,15 +8,10 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import { accountKeyAtom, accountRoleAtom } from "@/renderer/store/storage"
-import { atom } from "jotai"
+import { accountKeyAtom } from "@/renderer/store/storage"
 import { atomWithQuery } from "jotai-tanstack-query"
-import { RESET } from "jotai/utils"
-import { toast } from "sonner"
 
 const { VITE_BASE_URL } = import.meta.env
-
-const { setStoreValue, rendererLog } = window.electronAPI
 
 // -- 状态查询 atom
 export const statusQueryAtom = atomWithQuery((get) => {
@@ -38,25 +33,3 @@ export const statusQueryAtom = atomWithQuery((get) => {
 		enabled: Boolean(uuid && apiKey),
 	}
 })
-
-// -- 自动更新 accountRole 的 atom
-export const accountRoleUpdateAtom = atom(
-	(get) => get(statusQueryAtom),
-	(get, set, _update) => {
-		const { data, error } = get(statusQueryAtom)
-
-		if (data) {
-			set(accountRoleAtom, data)
-			setStoreValue("status", data.role)
-		}
-
-		if (error) {
-			set(accountRoleAtom, RESET)
-			rendererLog("error", "用户状态请求刷新失败!!!")
-			toast.dismiss()
-			toast.warning("网络异常，网络恢复后请重启客户端以及重新登录!!!", {
-				duration: 10 * 1000,
-			})
-		}
-	},
-)

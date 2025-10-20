@@ -8,27 +8,13 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import {
-	accountRoleUpdateAtom,
-	statusQueryAtom,
-} from "@/renderer/hooks/useClassStatusInterval"
-import {
-	collectUserInfo,
-	generatePermissionSet,
-} from "@/renderer/hooks/useIdentityArray"
 import { getUserAccount, syncUserState } from "@/renderer/ipc/userInfo"
-import {
-	accountKeyAtom,
-	accountRoleAtom,
-	isLoginAtom,
-	userIdentityAtom,
-} from "@/renderer/store/storage"
+import { accountKeyAtom, isLoginAtom } from "@/renderer/store/storage"
 import type { UserAccount, UserInfo } from "@/shared/types"
 import { atomEffect } from "jotai-effect"
 import { atomWithQuery } from "jotai-tanstack-query"
-import { RESET, atomWithStorage } from "jotai/utils"
+import { atomWithStorage } from "jotai/utils"
 import md5 from "md5"
-import { toast } from "sonner"
 import { postUserActionMutationAtom } from "./mutation"
 const { VITE_BASE_URL } = import.meta.env
 
@@ -140,52 +126,6 @@ export const userAuthAtom = atomWithQuery<{
 	}
 })
 
-// -- 账户角色检查
-export const checkAccountRoleAtom = atomWithQuery<
-	{ msg: string; role: 0 | 1 | 2 },
-	{ apiKey: string; uuid: string }
->((get) => {
-	const { apiKey, uuid } = get(accountKeyAtom)
-	return {
-		queryKey: ["check-account-role"],
-		queryFn: async () => {
-			const headers = { "api-key": apiKey }
-			const params = new URLSearchParams({ uuid })
-			const response = await fetch(
-				`${VITE_BASE_URL}/api/data/status?${params}`,
-				{
-					headers,
-				},
-			)
-
-			if (!response.ok) {
-				return { msg: "ERROR", role: 0 }
-			}
-
-			return response.json()
-		},
-	}
-})
-
-export const checkAccountRoleEffectAtom = atomEffect((get, set) => {
-	const { data, isError } = get(checkAccountRoleAtom)
-	const { isLoggedIn } = get(userAtom)
-	if (isError && isLoggedIn) {
-		set(accountRoleAtom, RESET)
-		rendererLog("error", "UserDropMenu-用户状态请求失败失败!!!")
-		toast.dismiss()
-		toast.warning("网络异常，网络恢复后请重启客户端以及重新登录 !!!", {
-			duration: 10 * 1000,
-		})
-		setStoreValue("status", 0)
-	}
-
-	if (data && data.msg === "SUCCESS") {
-		set(accountRoleAtom, data)
-		setStoreValue("status", data.role)
-	}
-})
-
 // -- 用户状态更新与缓存同步
 export const userAuthEffectAtom = atomEffect((get, set) => {
 	;(async () => {
@@ -225,18 +165,6 @@ export const userAuthEffectAtom = atomEffect((get, set) => {
 					uuid: userStateFromMain.user.uuid,
 					apiKey: userStateFromMain.user.apiKey,
 				})
-
-				// 存储用户身份标识
-				set(
-					userIdentityAtom,
-					generatePermissionSet(collectUserInfo(userStateFromMain.user)),
-				)
-			}
-
-			// 手动触发 accountRoleUpdateAtom
-			const { data: roleData } = get(statusQueryAtom)
-			if (roleData) {
-				set(accountRoleUpdateAtom, roleData)
 			}
 
 			rendererLog("info", "[user] 用户信息已从主进程同步到渲染进程")

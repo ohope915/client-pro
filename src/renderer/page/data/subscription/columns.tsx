@@ -10,7 +10,7 @@
 
 import { Checkbox } from "@/renderer/components/ui/checkbox"
 import { TremorBadge } from "@/renderer/components/ui/tremor-badge"
-import { usePermission } from "@/renderer/hooks/useIdentityArray"
+import { usePermission } from "@/renderer/hooks/useAccountArray"
 import { ISubscribeListType } from "@/renderer/schemas/subscribe-schema"
 import { userAtom } from "@/renderer/store/user"
 import { ColumnDef, Row } from "@tanstack/react-table"

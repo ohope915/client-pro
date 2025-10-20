@@ -9,17 +9,17 @@
  */
 
 import { isWindows } from "@/renderer/constant"
-import { accountRoleAtom } from "@/renderer/store/storage"
+import { userAtom } from "@/renderer/store/user"
 import { useAtomValue } from "jotai"
 
 const { VITE_XBX_ENV } = import.meta.env
 
 export const useRealTradingRole = () => {
-	const accountRole = useAtomValue(accountRoleAtom)
+	const { isMember } = useAtomValue(userAtom)
 
 	if (VITE_XBX_ENV === "development") {
 		return true
 	}
 
-	return accountRole.role === 2 && isWindows && VITE_XBX_ENV === "production"
+	return isMember && isWindows && VITE_XBX_ENV === "production"
 }
