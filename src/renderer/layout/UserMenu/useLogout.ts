@@ -9,7 +9,6 @@
  */
 
 import { useHandleTimeTask } from "@/renderer/hooks"
-import { clearUserState } from "@/renderer/ipc/userInfo"
 import { isUpdatingAtom } from "@/renderer/store"
 import { accountKeyAtom, isLoginAtom } from "@/renderer/store/storage"
 import {
@@ -33,7 +32,7 @@ export const useLogout = () => {
 	const setTimestampSign = useSetAtom(timestampSignAtom)
 	const handleTimeTask = useHandleTimeTask()
 	const setIsLogin = useSetAtom(isLoginAtom)
-	const { deleteStoreValue } = window.electronAPI
+	const { deleteStoreValue, clearUserState } = window.electronAPI
 	const handleLogout = () => {
 		setIsLogin(false)
 		setUser(RESET)

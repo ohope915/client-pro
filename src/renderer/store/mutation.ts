@@ -8,14 +8,13 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import { updateUserInfo } from "@/renderer/ipc/userInfo"
 import { postUserAction } from "@/renderer/request"
 import { accountKeyAtom } from "@/renderer/store/storage"
 import { userAtom } from "@/renderer/store/user"
 import { versionsAtom } from "@/renderer/store/versions"
 import { atomWithMutation } from "jotai-tanstack-query"
 
-const { rendererLog } = window.electronAPI
+const { rendererLog, updateUserInfo } = window.electronAPI
 
 export const userInfoMutationAtom = atomWithMutation(() => ({
 	mutationKey: ["user-info"],

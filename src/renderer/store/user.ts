@@ -8,7 +8,7 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import { getUserAccount, syncUserState } from "@/renderer/ipc/userInfo"
+const { getUserAccount, syncUserState } = window.electronAPI
 import { accountKeyAtom, isLoginAtom } from "@/renderer/store/storage"
 import type { UserAccount, UserInfo } from "@/shared/types"
 import { atomEffect } from "jotai-effect"

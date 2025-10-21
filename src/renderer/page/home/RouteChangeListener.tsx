@@ -8,13 +8,12 @@
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
 
-import { updateUserInfo } from "@/renderer/ipc/userInfo"
 import { userAtom } from "@/renderer/store/user"
 import { useAtom } from "jotai"
 import { useEffect } from "react"
 import { useLocation } from "react-router"
 
-const { rendererLog } = window.electronAPI
+const { rendererLog, updateUserInfo } = window.electronAPI
 
 const RouteChangeListener = () => {
 	const location = useLocation()

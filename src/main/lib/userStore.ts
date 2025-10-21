@@ -81,7 +81,6 @@ class UserStore {
 			return await userStore.getUserAccount()
 		}
 
-		// 获取本地存储的凭证
 		const store = new Store()
 		const apiKey = (await store.get("settings.api_key", "")) as string
 		const hid = (await store.get("settings.hid", "")) as string
@@ -105,7 +104,7 @@ class UserStore {
 					`[user] 获取用户信息失败: ${response.status} ${response.statusText}`,
 				)
 
-				// 如果是403无权限，说明凭证无效，清空用户状态，返回null
+				// 如果是403无权限，清空用户状态，返回null
 				if (response.status === 403) {
 					logger.error("[user] 凭证已过期或无效，清空用户状态")
 					await userStore.clearUserState()
@@ -159,7 +158,6 @@ class UserStore {
 			return await userStore.getUserAccount()
 		} catch (error) {
 			logger.error(`[user] 更新用户信息时发生错误: ${error}`)
-			// 发生错误时返回旧数据
 			return await userStore.getUserAccount()
 		}
 	}
