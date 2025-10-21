@@ -53,6 +53,8 @@ const genSelectStgInfo = (strategy: SelectStgType, includeInfo = true) => {
 		filter_list: strategy.filter_list,
 		rebalance_time: strategy.rebalance_time,
 		timing: strategy.timing ?? null,
+		scalein_targets: strategy.scalein_targets ?? null,
+		override: strategy.override ?? null,
 		...(includeInfo ? { info: strategy.info ?? {} } : {}), // -- 根据参数决定是否包含info字段
 	}
 }
