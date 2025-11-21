@@ -1,3 +1,10 @@
+import {
+	Accordion,
+	AccordionContent,
+	AccordionItem,
+	AccordionTrigger,
+} from "@/renderer/components/ui/accordion"
+import ButtonTooltip from "@/renderer/components/ui/button-tooltip"
 /**
  * quantclass-client
  * Copyright (c) 2025 量化小讲堂
@@ -7,9 +14,9 @@
  * Change Date: 2028-08-22 | Change License: GPL-3.0-or-later
  * See the LICENSE file and https://mariadb.com/bsl11/
  */
-
-import ButtonTooltip from "@/renderer/components/ui/button-tooltip"
+import { CardContent, CardFooter } from "@/renderer/components/ui/card"
 import { Input as InputUI } from "@/renderer/components/ui/input"
+import { Separator } from "@/renderer/components/ui/separator"
 import { Tabs, TabsList, TabsTrigger } from "@/renderer/components/ui/tabs"
 import { TimePicker } from "@/renderer/components/ui/time-picker"
 import { ALLOWED_HOLD_PERIODS } from "@/renderer/constant/strategy"
@@ -27,7 +34,6 @@ import { Input } from "@heroui/input"
 import { Select, SelectItem, SelectSection } from "@heroui/select"
 import { zodResolver } from "@hookform/resolvers/zod"
 import { Button } from "@renderer/components/ui/button"
-import { CardContent, CardFooter } from "@renderer/components/ui/card"
 import {
 	Form,
 	FormControl,
@@ -38,7 +44,10 @@ import {
 } from "@renderer/components/ui/form"
 import {
 	AlarmClockCheck,
+	ArrowDown,
+	ArrowUp,
 	Biohazard,
+	ChartPie,
 	CircleHelp,
 	CircuitBoard,
 	Filter,
@@ -719,7 +728,188 @@ export function SelectStgForm({
 								</div>
 							)}
 						</div>
-						<hr />
+						<FormField
+							control={form.control}
+							name="cross_sections"
+							render={({ field }) => (
+								<FormItem className={cn("flex flex-col")}>
+									<div className="rounded-lg border  ">
+										<FormLabel className="flex items-center gap-1 p-2 py-3">
+											<ChartPie className="size-4 mr-1" />
+											截面因子列表
+											<span className="text-xs">（暂不支持直接编辑）</span>
+										</FormLabel>
+										<Separator />
+										<div className="px-4">
+											{field.value?.length > 0 ? (
+												<Accordion type="multiple" className="w-full pb-4">
+													{field.value?.map((crossItem, index) => (
+														<AccordionItem key={index} value={`cross-${index}`}>
+															<AccordionTrigger className="!no-underline !hover:no-underline py-3">
+																<div className="flex items-center gap-2">
+																	<span className="hover:underline">
+																		{crossItem.name}
+																	</span>
+																	<span className="text-xs text-muted-foreground flex items-center gap-1">
+																		{crossItem.is_sort_asc === undefined ? (
+																			<>
+																				(从小到大排序
+																				<ArrowUp className="size-4" />)
+																			</>
+																		) : crossItem.is_sort_asc ? (
+																			<>
+																				(从小到大排序
+																				<ArrowUp className="size-4" />)
+																			</>
+																		) : (
+																			<>
+																				(从大到小排序
+																				<ArrowDown className="size-4" />)
+																			</>
+																		)}
+																	</span>
+																</div>
+															</AccordionTrigger>
+															<AccordionContent className="flex flex-col gap-4 text-balance bg-gray-100 dark:bg-black border p-2 rounded-lg mb-2">
+																<div className="space-y-2">
+																	<div className="flex items-center gap-1">
+																		<CircuitBoard className="size-4 mr-1" />
+																		<span>依赖的时序因子列表</span>
+																		<span className="text-xs">
+																			（暂不支持直接编辑）
+																		</span>
+																	</div>
+
+																	{crossItem?.factor_list?.length > 0 ? (
+																		<>
+																			<div className="grid grid-cols-4 gap-2 text-xs text-muted-foreground">
+																				<span>因子名称</span>
+																				<span>排序方式</span>
+																				<span>因子参数</span>
+																				<span>因子计算参数（比如权重）</span>
+																			</div>
+																			<div className="space-y-2">
+																				{crossItem?.factor_list?.map(
+																					(
+																						factor: [
+																							string,
+																							boolean,
+																							any,
+																							string | number | null,
+																						],
+																						index: number,
+																					) => (
+																						<div
+																							key={index}
+																							className="grid grid-cols-4 gap-2"
+																						>
+																							<FormControl>
+																								<InputUI
+																									value={factor[0]} // -- 因子名称
+																									className="text-muted-foreground text-xs"
+																									readOnly
+																								/>
+																							</FormControl>
+																							<FormControl>
+																								<InputUI
+																									value={
+																										factor[1]
+																											? "从小到大排序"
+																											: "从大到小排序"
+																									} // -- 排序方式
+																									className="text-muted-foreground text-xs"
+																									readOnly
+																								/>
+																							</FormControl>
+																							<FormControl>
+																								<InputUI
+																									value={
+																										factor[2] !== null
+																											? JSON.stringify(
+																													factor[2],
+																												)
+																											: "无参数"
+																									} // -- 因子参数
+																									className="text-muted-foreground text-xs font-mono"
+																									readOnly
+																								/>
+																							</FormControl>
+																							<FormControl>
+																								<InputUI
+																									value={factor[3] ?? ""} // -- 因子计算参数（比如权重）
+																									className="text-muted-foreground text-xs"
+																									readOnly
+																								/>
+																							</FormControl>
+																						</div>
+																					),
+																				)}
+																			</div>
+																		</>
+																	) : (
+																		<div className="text-muted-foreground ml-2 text-xs">
+																			暂无依赖因子，请先进行配置
+																		</div>
+																	)}
+																</div>
+
+																<Separator />
+
+																<div className="space-y-2">
+																	<div className="grid grid-cols-4 gap-2 text-xs ">
+																		<span>参数</span>
+																		<span>横截面因子聚合权重</span>
+																		<span>过滤条件</span>
+																		<span>分钟数据</span>
+																	</div>
+																	<div className="space-y-2">
+																		<div className="grid grid-cols-4 gap-2">
+																			<FormControl>
+																				<InputUI
+																					value={crossItem?.params ?? "无"} // -- 参数
+																					className="text-muted-foreground text-xs"
+																					readOnly
+																				/>
+																			</FormControl>
+																			<FormControl>
+																				<InputUI
+																					value={crossItem?.args ?? "无"} // -- 横截面因子聚合权重
+																					className="text-muted-foreground text-xs"
+																					readOnly
+																				/>
+																			</FormControl>
+																			<FormControl>
+																				<InputUI
+																					value={crossItem?.method ?? "无"} // -- 过滤条件
+																					className="text-muted-foreground text-xs"
+																					readOnly
+																				/>
+																			</FormControl>
+																			<FormControl>
+																				<InputUI
+																					value={crossItem?.minutes ?? "无"} // -- 分钟数据
+																					className="text-muted-foreground text-xs"
+																					readOnly
+																				/>
+																			</FormControl>
+																		</div>
+																	</div>
+																</div>
+															</AccordionContent>
+														</AccordionItem>
+													))}
+												</Accordion>
+											) : (
+												<div className="text-muted-foreground text-xs py-2">
+													暂无截面因子，请先进行配置
+												</div>
+											)}
+										</div>
+									</div>
+									<FormMessage />
+								</FormItem>
+							)}
+						/>
 						<div className="flex flex-col gap-3 bg-gray-100 border p-2 rounded-lg dark:bg-black">
 							<h3 className="text-sm text-warning-600 dark:text-warning flex items-center gap-1">
 								<Biohazard className="size-4 mr-1 font-bold" />
