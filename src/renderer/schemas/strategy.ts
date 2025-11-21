@@ -122,6 +122,7 @@ export const CoreStrategySchema = z.object({
 	offset_list: OffsetListSchema,
 	rebalance_time: RebalanceTimeSchema,
 	factor_list: z.array(z.any()),
+	cross_sections: z.array(z.any()),
 	filter_list: z.array(z.any()),
 	timing: TimingSchema,
 	scalein_targets: z.array(z.number()).optional(),
