@@ -43,9 +43,6 @@ export const dataColumns = (
 
 			return (
 				<div className="flex items-center gap-2">
-					<div className="text-foreground">
-						{row.original?.displayName ?? "--"}
-					</div>
 					<Tooltip delayDuration={0}>
 						<TooltipTrigger>
 							<div
@@ -67,6 +64,9 @@ export const dataColumns = (
 							<p>{message}</p>
 						</TooltipContent>
 					</Tooltip>
+					<div className="text-foreground">
+						{row.original?.displayName ?? "--"}
+					</div>
 				</div>
 			)
 		},
